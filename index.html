@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Jungle Book</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+        
+        <!-- Extension -->
+        <script src="../lib/../lib/tableau-extensions-latest.js"></script>
+
+        <!-- Jungle book js logic -->
+        <script src="./jungle-book.js"></script>
+    </head>
+    
+    <style>
+        .full-view {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        polygon.filter {
+            stroke: red;
+            fill: white;
+            fill-opacity: 0;
+            stroke-width: 6;
+        }
+
+        polygon.active-filter {
+            fill-opacity: .3;
+        }
+
+        polygon.filter:hover, #settings-gear:hover {
+            cursor: pointer;
+        }
+
+        polygon.hidden-filter {
+            stroke-opacity: 0;
+        }
+
+        polyline.outline {
+            fill: none;
+            stroke: red;
+            stroke-width: 6;
+        }
+
+        .btn-no-focus:focus {
+            outline: none;
+            box-shadow: none;
+        }
+    </style>
+
+    
+    <body onload="onBodyLoad();">
+        <img id="mapped-image" class="full-view" style="object-fit: cover" onclick="clearFilters();"/>
+        <svg id="svg-root" class="full-view" onclick="clearFilters();"></svg>
+        <div id="selection-div" class="full-view hidden"></div>
+        <div id="config-div" class="row" style="position:absolute; bottom:0; right:0; margin:8">
+            <div class="input-group input-group-sm">
+                <span id="edit-buttons" class="hidden">
+                    <button id="delete-vertex" title="Delete Vertex" type="button" class="btn btn-default btn-sm btn-no-focus" onclick="deleteVertex();">
+                        <span class="glyphicon glyphicon-step-backward"></span>
+                    </button>
+                    <button id="delete-shape" title="Delete Shape" type="button" class="btn btn-default btn-sm btn-no-focus" onclick="deleteShape();">
+                        <span class="glyphicon glyphicon-backward"></span>
+                    </button>
+                    <button id="update-settings" title="Update Settings" type="button" class="btn btn-default btn-sm btn-no-focus" data-toggle="modal" data-target="#settings-modal">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    <button id="save-all" title="Save" type="button" class="btn btn-default btn-sm btn-no-focus" onClick="saveAll();">
+                        <span class="glyphicon glyphicon-floppy-save"></span>
+                    </button>
+                </span>
+                <img id="settings-gear" src="./gear.png" height="24" width="24" onclick="onGearClicked();"/>
+            </div>
+        </div>
+
+        <!-- Modal for setting image, sheet and field -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-dialog modal-sm" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Image</span>
+                                    <input id="image-url" title="Image URL" type="text" class="form-control" />
+                                </div>
+                                <br/>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Sheet</span>
+                                    <select id="sheet-names" class="form-control"></select>
+                                </div>
+                                <br/>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Filter</span>
+                                    <select id="filter-fields" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="updateSettings();">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for picking the field value after completing a shape -->
+        <div class="modal" id="field-modal">
+            <div class="modal-dialog modal-sm" role="dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">Value</span>
+                                    <select id="filter-domain" class="form-control"></select>
+                                </div>
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="saveShape();">Save </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
